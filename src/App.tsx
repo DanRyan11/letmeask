@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { auth, firebase } from './services/firebase';
@@ -22,17 +22,18 @@ export const AuthContext = createContext({} as AuthContextType);
 function App() {
   const [user, setUser] = useState<User>();
 
-  async function signInWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) saveCredentialsUser({ user });
+    })
+  }, [])
 
-    const result = await auth.signInWithPopup(provider);
+  function saveCredentialsUser(result: any) {
 
     if (result.user) {
       const { displayName, photoURL, uid } = result.user;
 
-      if (!displayName || !photoURL) {
-        throw new Error("Missing information from Google account");
-      }
+      if (!displayName || !photoURL) throw new Error("Missing information from Google account");
 
       setUser({
         id: uid,
@@ -40,6 +41,14 @@ function App() {
         avatar: photoURL
       })
     }
+  }
+
+  async function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    const result = await auth.signInWithPopup(provider);
+
+    saveCredentialsUser(result);
   }
 
   return (
