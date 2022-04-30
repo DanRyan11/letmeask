@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { Home } from "./pages/Home";
 import { NewRoom } from "./pages/NewRoom";
+import { Room } from './pages/Room';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 import { AuthContextProvider } from './contexts/AuthContext';
 
@@ -13,6 +15,9 @@ function App() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="/rooms/new" element={<NewRoom />} />
+          <Route path="/rooms/:id" element={<Room />} />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthContextProvider>
     </BrowserRouter>
