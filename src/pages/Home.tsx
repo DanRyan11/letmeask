@@ -7,6 +7,7 @@ import googleIconImage from '../assets/images/google-icon.svg';
 import { Button } from '../components/Button';
 
 import '../styles/auth.scss';
+
 import { useAuth } from '../hooks/useAuth';
 import { FormEvent, useState } from 'react';
 import { database } from '../services/firebase';
@@ -17,23 +18,21 @@ export function Home() {
   const [roomCode, setCoomCode] = useState('');
 
   async function handleCreateRoom() {
-    if (!user) {
-      await signInWithGoogle();
-    }
+    if (!user) await signInWithGoogle();
 
     navigate('/rooms/new')
   }
 
   async function handleJoinRoom(event: FormEvent) {
     event.preventDefault();
-    
+
     const trimRoomCode = roomCode.trim();
 
-    if(trimRoomCode === '') return
+    if (trimRoomCode === '') return
 
     const roomRef = await database.ref(`rooms/${trimRoomCode}`).get();
 
-    if(!roomRef.exists()) return alert('Sala não encontrada');
+    if (!roomRef.exists()) return alert('Sala não encontrada');
 
     navigate(`/rooms/${roomCode}`)
   }
@@ -56,9 +55,9 @@ export function Home() {
           <div className='separator'>ou entre em uma sala</div>
 
           <form onSubmit={handleJoinRoom}>
-            <input 
+            <input
               type="text"
-              placeholder="Digite o código da sala" 
+              placeholder="Digite o código da sala"
               onChange={event => setCoomCode(event.target.value)}
               value={roomCode}
             />
