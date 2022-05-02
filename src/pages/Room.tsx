@@ -127,7 +127,6 @@ export function Room() {
 
         </form >
 
-        {}
       </main >
     </div >
   )
