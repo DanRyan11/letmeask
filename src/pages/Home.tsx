@@ -33,6 +33,7 @@ export function Home() {
     const roomRef = await database.ref(`rooms/${trimRoomCode}`).get();
 
     if (!roomRef.exists()) return alert('Sala não encontrada');
+    if (roomRef.val().endedAt) return alert('Sala já fechada');
 
     navigate(`/rooms/${roomCode}`)
   }
